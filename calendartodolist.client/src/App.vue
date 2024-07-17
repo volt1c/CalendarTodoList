@@ -1,15 +1,29 @@
 <script setup lang="ts">
-import { RouterView, RouterLink } from 'vue-router'
+    import LogoImg from '@/components/LogoImg.vue'
 </script>
 
 <template>
-    <header>
-        <RouterLink to="/"> Header </RouterLink> 
-        <RouterLink to="/login"> Login </RouterLink>
-        <RouterLink to="/register"> Register </RouterLink>
-    </header>
+    <v-app>
+        <v-layout>
+            <v-app-bar>
+                <v-app-bar-title @click="$router.push('/')">
+                    <v-icon start>
+                        <logo-img/>
+                    </v-icon>Calendar
+                </v-app-bar-title>
+                <v-spacer></v-spacer>
+                <v-btn color="primary"
+                       variant="flat"
+                       class="mr-2"
+                       to="/login">
+                    Login
+                    <v-icon icon="mdi-login" end></v-icon>
+                </v-btn>
+            </v-app-bar>
 
-  <main>
-    <RouterView />
-  </main>
+            <v-main class="">
+                <router-view />
+            </v-main>
+        </v-layout>
+    </v-app>
 </template>
