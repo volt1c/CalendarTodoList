@@ -1,3 +1,4 @@
+export type ErrorInfo = { id: string; value: string };
 type RegisterResponse =
   | {
       isSuccess: true;
@@ -5,10 +6,10 @@ type RegisterResponse =
   | {
       isSuccess: false;
       title: string;
-      errors: Record<string, [string] | undefined>;
+      errors: ErrorInfo[];
     };
 
-export async function login(
+export async function register(
   email: string,
   password: string
 ): Promise<RegisterResponse> {
@@ -26,9 +27,14 @@ export async function login(
 
   const data = await res.json();
 
+  const errors: ErrorInfo[] = Object.keys(data.errors).map((k: string) => ({
+    id: k,
+    value: data.errors[k][0],
+  }));
+
   return {
     isSuccess: false,
     title: data.title,
-    errors: data.errors,
+    errors,
   };
 }
