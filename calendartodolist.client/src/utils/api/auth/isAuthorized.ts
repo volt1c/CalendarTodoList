@@ -1,4 +1,4 @@
-function isAuthorized(): boolean {
+export function isAuthorized(): boolean {
   const accessToken = localStorage.getItem("accessToken");
 
   if (accessToken == null) return false;
@@ -6,9 +6,9 @@ function isAuthorized(): boolean {
   const expiresIn = Number(localStorage.getItem("expiresIn"));
   const loginTime = Number(localStorage.getItem("loginTime"));
 
-  const expirationTime = loginTime + expiresIn;
+  const expirationTime = loginTime + expiresIn * 1000;
 
-  if (expirationTime > Date.now()) return false;
+  if (expirationTime < Date.now()) return false;
 
   return true;
 }
