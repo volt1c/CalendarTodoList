@@ -1,9 +1,22 @@
+using Microsoft.EntityFrameworkCore;
+using TestV2.Server.Migrations;
+using TestV2.Server.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddDbContext<ApplicationDbContext>(opts => {
+    var connStr = builder.Configuration.GetConnectionString("Default");
+    opts.UseSqlServer(connStr);
+});
+
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<User>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -20,6 +33,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapGroup("/api/Identity").WithTags("Identity").MapIdentityApi<User>();
 
 app.UseAuthorization();
 
