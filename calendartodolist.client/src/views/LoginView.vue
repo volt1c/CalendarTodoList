@@ -1,6 +1,67 @@
 <script setup lang="ts">
+import LogoBanner from '@/components/LogoBanner.vue'
+import { login } from '@/utils/api/auth/login';
+import { emailRules } from '@/utils/rules/emilRules';
+import { requiredRule } from '@/utils/rules/requiredRule';
+import { ref } from 'vue';
+
+const visible = ref(false)
+
+const email = ref('')
+const password = ref('')
+
+const isSuccess = ref<boolean>()
+const loading = ref(false)
+
+const handleLogin = async () => {
+    loading.value = true
+    const result = await login(email.value, password.value)
+    isSuccess.value = result.isSuccess
+    loading.value = false
+}
 </script>
 
 <template>
-    Login
+    <v-container class="pt-10">
+
+        <logo-banner class="mb-5" />
+
+        <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
+            <div class="text-subtitle-1 text-medium-emphasis">Account</div>
+
+            <v-text-field density="compact" placeholder="Email address" :rules="emailRules" v-model="email"
+                :disabled="loading" prepend-inner-icon="mdi-email-outline" variant="outlined"></v-text-field>
+
+            <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+                Password
+
+                <a class="text-caption text-decoration-none text-blue" href="#" rel="noopener noreferrer"
+                    target="_blank">
+                    Forgot login password?
+                </a>
+            </div>
+
+            <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
+                density="compact" placeholder="Enter your password" prepend-inner-icon="mdi-lock-outline"
+                v-model="password" :rules="[requiredRule]" variant="outlined" :disabled="loading"
+                @click:append-inner="visible = !visible"></v-text-field>
+
+            <v-card v-if="isSuccess === false" class="mb-12 mt-2" color="error" variant="tonal">
+                <v-card-text class="text-medium-emphasis text-caption">
+                    Something went wrong, make sure you entered the correct email and password.
+                </v-card-text>
+            </v-card>
+
+            <v-btn class="mb-8" color="blue" size="large" variant="tonal" block v-on:click="handleLogin"
+                :loading="loading">
+                Log In
+            </v-btn>
+
+            <v-card-text class="text-center">
+                <router-link class="text-blue text-decoration-none" to="/register">
+                    Sign up now <v-icon icon="mdi-chevron-right"></v-icon>
+                </router-link>
+            </v-card-text>
+        </v-card>
+    </v-container>
 </template>
