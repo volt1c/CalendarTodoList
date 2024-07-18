@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import LogoBanner from '@/components/LogoBanner.vue'
+import { key } from '@/stores/auth';
 import { login } from '@/utils/api/auth/login';
 import { emailRules } from '@/utils/rules/emilRules';
 import { requiredRule } from '@/utils/rules/requiredRule';
 import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+
+const store = useStore(key)
+const router = useRouter()
+const route = useRoute()
 
 const visible = ref(false)
 
@@ -12,11 +19,18 @@ const password = ref('')
 
 const isSuccess = ref<boolean>()
 const loading = ref(false)
+const regSuccess = route.query.reg == 'success'
 
 const handleLogin = async () => {
     loading.value = true
     const result = await login(email.value, password.value)
     isSuccess.value = result.isSuccess
+
+    if (result.isSuccess) {
+        store.commit("storeLogin", result)
+        router.push('/calendar')
+    }
+
     loading.value = false
 }
 </script>
@@ -26,7 +40,10 @@ const handleLogin = async () => {
 
         <logo-banner class="mb-5" />
 
-        <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
+        <v-card class="mx-auto pa-12 pt-9 pb-8" elevation="8" max-width="448" rounded="lg">
+            <v-alert v-if="regSuccess" text="Your registration was successful, now you can log in."
+                title="Successful registration" type="success" variant="tonal" class="mb-4"></v-alert>
+
             <div class="text-subtitle-1 text-medium-emphasis">Account</div>
 
             <v-text-field density="compact" placeholder="Email address" :rules="emailRules" v-model="email"

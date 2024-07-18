@@ -2,7 +2,10 @@
 import LogoBanner from '@/components/LogoBanner.vue'
 import { register, type ErrorInfo } from '@/utils/api/auth/register';
 import { emailRules } from '@/utils/rules/emilRules';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 const visible = ref(false)
 const loading = ref(false)
@@ -24,7 +27,7 @@ const handleRegister = async () => {
     const result = await register(email.value, password.value)
     if (result.isSuccess) {
         loading.value = false
-        // redirect
+        router.push({ name: 'Login', query: { reg: 'success' } })
         return
     }
     errors.value = result.errors
