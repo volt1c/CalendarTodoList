@@ -12,8 +12,7 @@ namespace TestV2.Server.Models
                 Date,
                 Title,
                 Description,
-                IsComplete, 
-                User.Id
+                IsComplete
             );
         }
     }
@@ -23,8 +22,7 @@ namespace TestV2.Server.Models
         DateOnly Date,
         string Title,
         string Description,
-        bool IsComplete,
-        string UserId
+        bool IsComplete
     );
 
     public record CreateAssignmentDto(
