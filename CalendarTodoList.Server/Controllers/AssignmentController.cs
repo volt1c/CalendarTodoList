@@ -32,6 +32,30 @@ namespace TestV2.Server.Controllers
             return Ok(assigments);
         }
 
+        [HttpGet("today")]
+        public async Task<ActionResult<IEnumerable<AssignmentDto>>> GetToday(DateOnly date)
+        {
+            var user = _context.Users.Where(e => e.Email == User.Identity!.Name).First();
+            var today = DateOnly.FromDateTime(DateTime.Now);
+
+            var assigments = await _context.Assignments
+                .Where(e => e.User.Id == user.Id && e.Date == today)
+                .Select(e => e.AsDto()).ToArrayAsync();
+            return Ok(assigments);
+        }
+
+        [HttpGet("date/{date}")]
+        public async Task<ActionResult<IEnumerable<AssignmentDto>>> GetByDate(DateOnly date)
+        {
+            var user = _context.Users.Where(e => e.Email == User.Identity!.Name).First();
+
+            var assigments = await _context.Assignments
+                .Where(e => e.User.Id == user.Id && e.Date == date)
+                .Select(e => e.AsDto()).ToArrayAsync();
+            return Ok(assigments);
+        }
+
+
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<AssignmentDto>> GetOne(Guid id)
         {
