@@ -28,7 +28,7 @@ const handleLogin = async () => {
 
     if (result.isSuccess) {
         store.commit("storeLogin", result)
-        router.push('/calendar')
+        router.push({ name: 'Calendar', query: { status: regSuccess ? 'new' : undefined } })
     }
 
     loading.value = false
