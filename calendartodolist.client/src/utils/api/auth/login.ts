@@ -1,6 +1,13 @@
-type LoginResponse = {
-  isSuccess: boolean;
-};
+type LoginResponse =
+  | {
+      isSuccess: false;
+    }
+  | {
+      isSuccess: true;
+      accessToken: string;
+      expiresIn: number;
+      loginTime: number;
+    };
 
 export async function login(
   email: string,
@@ -20,9 +27,16 @@ export async function login(
 
   const data = await res.json();
 
+  const loginTime = Date.now();
+
   localStorage.setItem("accessToken", data.accessToken);
   localStorage.setItem("expiresIn", data.expiresIn);
-  localStorage.setItem("loginTime", Date.now().toString());
+  localStorage.setItem("loginTime", loginTime.toString());
 
-  return { isSuccess: true };
+  return {
+    isSuccess: true,
+    accessToken: data.accessToken,
+    expiresIn: data.expiresIn,
+    loginTime,
+  };
 }

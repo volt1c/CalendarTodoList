@@ -1,27 +1,8 @@
-import { createApp } from 'vue'
+import { createApp } from "vue";
 
-import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
-import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import vuetify from "@/vuetify";
+import store, { key } from "@/stores/auth";
+import router from "@/router";
+import App from "@/App.vue";
 
-import App from './App.vue'
-import router from './router'
-
-const vuetify = createVuetify({
-    components,
-    directives,
-    icons: {
-        defaultSet: 'mdi',
-        aliases,
-        sets: {
-            mdi,
-        },
-    },
-})
-
-createApp(App)
-    .use(vuetify)
-    .use(router)
-    .mount('#app')
+createApp(App).use(vuetify).use(router).use(store, key).mount("#app");
