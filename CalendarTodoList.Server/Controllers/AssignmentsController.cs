@@ -11,11 +11,11 @@ namespace TestV2.Server.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class AssignmentController : ControllerBase
+    public class AssignmentsController : ControllerBase
     {
         private ApplicationDbContext _context;
 
-        public AssignmentController(ApplicationDbContext context)
+        public AssignmentsController(ApplicationDbContext context)
         {
             _context = context;
 
