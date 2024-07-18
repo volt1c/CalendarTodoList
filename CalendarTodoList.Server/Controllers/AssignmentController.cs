@@ -44,13 +44,25 @@ namespace TestV2.Server.Controllers
             return Ok(assigments);
         }
 
-        [HttpGet("date/{date}")]
-        public async Task<ActionResult<IEnumerable<AssignmentDto>>> GetByDate(DateOnly date)
+        [HttpGet("pending")]
+        public async Task<ActionResult<IEnumerable<AssignmentDto>>> GetPending(DateOnly date)
+        {
+            var user = _context.Users.Where(e => e.Email == User.Identity!.Name).First();
+            var today = DateOnly.FromDateTime(DateTime.Now);
+
+            var assigments = await _context.Assignments
+                .Where(e => e.User.Id == user.Id && !e.IsComplete && e.Date < today)
+                .Select(e => e.AsDto()).ToArrayAsync();
+            return Ok(assigments);
+        }
+
+        [HttpGet("{year}/{month}")]
+        public async Task<ActionResult<IEnumerable<AssignmentDto>>> GetByDate(int year, int month)
         {
             var user = _context.Users.Where(e => e.Email == User.Identity!.Name).First();
 
             var assigments = await _context.Assignments
-                .Where(e => e.User.Id == user.Id && e.Date == date)
+                .Where(e => e.User.Id == user.Id && e.Date.Year == year && e.Date.Month == month)
                 .Select(e => e.AsDto()).ToArrayAsync();
             return Ok(assigments);
         }
