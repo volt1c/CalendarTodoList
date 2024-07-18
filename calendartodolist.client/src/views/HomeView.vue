@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <v-container>
+    <v-container class="h-100 justify-center d-flex flex-column">
         <v-row class="justify-center my-10">
             <v-col cols="12" class="text-center justify-center">
                 <v-img src="/logo.png" max-width="200" class="my-4 ml-auto mr-auto"></v-img>
