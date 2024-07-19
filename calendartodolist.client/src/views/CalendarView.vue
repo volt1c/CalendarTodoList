@@ -54,7 +54,7 @@ onBeforeMount(async () => {
         allAssignments.value = results[0].assignments
     if (results[1].isSuccess) {
         allAssignments.value = results[1].assignments.reduce((acc, curr) => {
-            const isDuplicated = acc.findIndex(a => a.id == curr.id) == -1
+            const isDuplicated = acc.findIndex(a => a.id == curr.id) != -1
             if (!isDuplicated)
                 acc.push(curr)
             return acc
@@ -197,7 +197,7 @@ const tomorrowAmount = computed(() => {
 })
 
 const allPending = computed(() => {
-    const todayDate = new Date(today())
+    const todayDate = new Date(dateToJsonDateOnly(today()))
     return allAssignments.value.filter(a => !a.isComplete && new Date(a.date) < todayDate)
 })
 
