@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using CalendarTodoList.Server.Migrations;
 using CalendarTodoList.Server.Models;
+using CalendarTodoList.Server.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,9 @@ builder.Services.AddSwaggerGen(c => {
     });
 });
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -75,6 +79,8 @@ app.UseHttpsRedirection();
 app.MapGroup("/api/Identity").WithTags("Identity").MapIdentityApi<User>();
 
 app.UseAuthorization();
+
+app.UseExceptionHandler();
 
 app.MapControllers();
 
