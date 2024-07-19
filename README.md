@@ -1,5 +1,9 @@
 # CalendarTodoList
 
+## Requirements
+
+- MS SQL Server
+
 ## Development
 
 ### Add connection string
@@ -14,3 +18,15 @@ In Visual Studio 2022, right-click on `CalendarTodoList.Server` then select `Man
   }
 }
 ```
+
+## Overview
+
+### Normal
+![](./.assets/home-page.png)
+![](./.assets/login-page.png)
+![](./.assets/register-page.png)
+![](./.assets/calendar-page.png)
+### New user
+![](./.assets/new-user-register-page.png)
+![](./.assets/new-user-calendar-page.png)
+
