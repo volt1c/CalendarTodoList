@@ -49,6 +49,17 @@ builder.Services.AddSwaggerGen(c => {
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    try {
+        db.Database.Migrate();
+    } catch(Exception ex) {
+        var logger = app.Services.GetService<ILogger<Program>>();
+        logger.LogCritical(ex.Message + " (Possible permission errors)");
+    }
+}
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
