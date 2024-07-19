@@ -7,7 +7,7 @@ namespace CalendarTodoList.Server.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         public DateOnly Date { get; set; }
 
