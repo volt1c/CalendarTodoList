@@ -80,7 +80,7 @@ namespace CalendarTodoList.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Add([FromBody] CreateAssignmentDto assignmentDto)
+        public async Task<ActionResult<AssignmentDto>> Add([FromBody] CreateAssignmentDto assignmentDto)
         {
             var user = _context.Users.Where(e => e.Email == User.Identity!.Name).FirstOrDefault();
             if (user == null)
@@ -96,10 +96,12 @@ namespace CalendarTodoList.Server.Controllers
                 IsComplete = assignmentDto.IsComplete,
                 User = user,
             };
-            _context.Assignments.Add(assignment);
+
+            AssignmentDto dto = _context.Assignments.Add(assignment).Entity.AsDto();
 
             await _context.SaveChangesAsync();
-            return Ok();
+
+            return Ok(dto);
         }
 
         [HttpPut("{id:guid}")]
@@ -114,6 +116,7 @@ namespace CalendarTodoList.Server.Controllers
             if (foundAssignment.User.Id != user.Id)
                 return BadRequest();
 
+            foundAssignment.Date = assignmentDto.Date;
             foundAssignment.Title = assignmentDto.Title;
             foundAssignment.Description = assignmentDto.Description;
             foundAssignment.IsComplete = assignmentDto.IsComplete;
@@ -121,6 +124,18 @@ namespace CalendarTodoList.Server.Controllers
             _context.Assignments.Update(foundAssignment);
             await _context.SaveChangesAsync();
             return Ok();
+        }
+
+        [HttpPatch("{id:guid}")]
+        public async Task<ActionResult> ChangeSelected(Guid id, [FromBody] UpdateComplateAssignmentDto assignmentDto)
+        {
+            var assignment = _context.Assignments.Find(id);
+            if (assignment == null)
+                return NotFound();
+            assignment.IsComplete = assignmentDto.IsComplete;
+            await _context.SaveChangesAsync();
+            return Ok();
+
         }
 
         [HttpDelete("{id:guid}")]
