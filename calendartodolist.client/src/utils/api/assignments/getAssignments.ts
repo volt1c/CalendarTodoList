@@ -1,8 +1,6 @@
-type GetAssignmentsResponse = {
-  isSuccess: boolean;
-};
+import type { IResult } from "@/types/IResult";
 
-export async function getAssignmentsToday(): Promise<GetAssignmentsResponse> {
+export async function getAssignmentsToday(): Promise<IResult> {
   const res = await fetch(`/api/Assignments/today`, {
     method: "GET",
     headers: {

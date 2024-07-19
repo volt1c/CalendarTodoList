@@ -1,13 +1,7 @@
 import type { IAssignment } from "@/types/IAssignment";
+import type { IResult } from "@/types/IResult";
 
-type GetAssignmentsResponse =
-  | {
-      isSuccess: false;
-    }
-  | {
-      isSuccess: true;
-      assignments: IAssignment[];
-    };
+type GetAssignmentsResponse = IResult<{ assignments: IAssignment[] }>;
 
 export async function getAssignments(
   year: number,

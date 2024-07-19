@@ -1,13 +1,10 @@
-type LoginResponse =
-  | {
-      isSuccess: false;
-    }
-  | {
-      isSuccess: true;
-      accessToken: string;
-      expiresIn: number;
-      loginTime: number;
-    };
+import type { IResult } from "@/types/IResult";
+
+type LoginResponse = IResult<{
+  accessToken: string;
+  expiresIn: number;
+  loginTime: number;
+}>;
 
 export async function login(
   email: string,

@@ -1,13 +1,7 @@
 import type { IAssignment } from "@/types/IAssignment";
+import type { IResult } from "@/types/IResult";
 
-type GetAssignmentsPendingResponse =
-  | {
-      isSuccess: false;
-    }
-  | {
-      isSuccess: true;
-      assignments: IAssignment[];
-    };
+type GetAssignmentsPendingResponse = IResult<{ assignments: IAssignment[] }>;
 
 export async function getAssignmentsPending(): Promise<GetAssignmentsPendingResponse> {
   const res = await fetch(`/api/Assignments/pending`, {

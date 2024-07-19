@@ -1,13 +1,7 @@
+import type { IResult } from "@/types/IResult";
+
 export type ErrorInfo = { id: string; value: string };
-type RegisterResponse =
-  | {
-      isSuccess: true;
-    }
-  | {
-      isSuccess: false;
-      title: string;
-      errors: ErrorInfo[];
-    };
+type RegisterResponse = IResult<{}, { title: string; errors: ErrorInfo[] }>;
 
 export async function register(
   email: string,
