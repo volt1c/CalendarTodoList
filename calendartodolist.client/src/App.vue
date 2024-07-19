@@ -7,8 +7,6 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 const store = useStore(key)
 
-console.log('isAuthorized', store.getters.isAuthorized)
-
 const handleLogout = () => {
     store.commit('storeClear')
     router.push('/')
