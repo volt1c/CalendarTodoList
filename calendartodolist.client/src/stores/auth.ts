@@ -1,3 +1,4 @@
+import { logout } from "@/utils/api/auth/logout";
 import { createStore } from "vuex";
 
 export type AuthStore = {
@@ -20,6 +21,7 @@ const store = createStore({
       state.loginTime = payload.loginTime;
     },
     storeClear(state) {
+      logout();
       state.accessToken = "";
       state.expiresIn = 0;
       state.loginTime = 0;
