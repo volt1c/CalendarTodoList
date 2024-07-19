@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TestV2.Server.Models;
+using CalendarTodoList.Server.Models;
 
-namespace TestV2.Server.Migrations
+namespace CalendarTodoList.Server.Migrations
 {
     public class ApplicationDbContext : IdentityDbContext<User>
     {

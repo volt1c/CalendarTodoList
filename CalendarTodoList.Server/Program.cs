@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using TestV2.Server.Migrations;
-using TestV2.Server.Models;
+using CalendarTodoList.Server.Migrations;
+using CalendarTodoList.Server.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

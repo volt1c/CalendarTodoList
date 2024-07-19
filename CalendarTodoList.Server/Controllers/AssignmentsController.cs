@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using TestV2.Server.Migrations;
-using TestV2.Server.Models;
+using CalendarTodoList.Server.Migrations;
+using CalendarTodoList.Server.Models;
 
-namespace TestV2.Server.Controllers
+namespace CalendarTodoList.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

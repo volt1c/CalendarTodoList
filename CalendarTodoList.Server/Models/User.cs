@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace TestV2.Server.Models
+namespace CalendarTodoList.Server.Models
 {
     public class User : IdentityUser
     {

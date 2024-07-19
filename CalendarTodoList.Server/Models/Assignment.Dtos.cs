@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace TestV2.Server.Models
+namespace CalendarTodoList.Server.Models
 {
     public partial class Assignment
     {
@@ -37,5 +37,9 @@ namespace TestV2.Server.Models
         [Required][StringLength(50)] string Title,
         [StringLength(100)] string Description,
         [DefaultValue(false)] bool IsComplete
+    );
+
+    public record UpdateComplateAssignmentDto(
+        [Required] bool IsComplete
     );
 }

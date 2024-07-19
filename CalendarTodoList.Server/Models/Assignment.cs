@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TestV2.Server.Models
+namespace CalendarTodoList.Server.Models
 {
     public partial class Assignment
     {

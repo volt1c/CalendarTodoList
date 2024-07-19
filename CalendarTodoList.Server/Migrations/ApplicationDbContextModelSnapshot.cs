@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TestV2.Server.Migrations;
+using CalendarTodoList.Server.Migrations;
 
 #nullable disable
 
@@ -155,7 +155,7 @@ namespace CalendarTodoList.Server.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TestV2.Server.Models.Assignment", b =>
+            modelBuilder.Entity("CalendarTodoList.Server.Models.Assignment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -186,7 +186,7 @@ namespace CalendarTodoList.Server.Migrations
                     b.ToTable("Assignments");
                 });
 
-            modelBuilder.Entity("TestV2.Server.Models.User", b =>
+            modelBuilder.Entity("CalendarTodoList.Server.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -262,7 +262,7 @@ namespace CalendarTodoList.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("TestV2.Server.Models.User", null)
+                    b.HasOne("CalendarTodoList.Server.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -271,7 +271,7 @@ namespace CalendarTodoList.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("TestV2.Server.Models.User", null)
+                    b.HasOne("CalendarTodoList.Server.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -286,7 +286,7 @@ namespace CalendarTodoList.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TestV2.Server.Models.User", null)
+                    b.HasOne("CalendarTodoList.Server.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -295,23 +295,23 @@ namespace CalendarTodoList.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("TestV2.Server.Models.User", null)
+                    b.HasOne("CalendarTodoList.Server.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TestV2.Server.Models.Assignment", b =>
+            modelBuilder.Entity("CalendarTodoList.Server.Models.Assignment", b =>
                 {
-                    b.HasOne("TestV2.Server.Models.User", "User")
+                    b.HasOne("CalendarTodoList.Server.Models.User", "User")
                         .WithMany("Assignments")
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TestV2.Server.Models.User", b =>
+            modelBuilder.Entity("CalendarTodoList.Server.Models.User", b =>
                 {
                     b.Navigation("Assignments");
                 });
