@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import LogoBanner from '@/components/LogoBanner.vue'
+import EmailInput from '@/components/forms/inputs/EmailInput.vue';
+import PasswordInput from '@/components/forms/inputs/PasswordInput.vue';
 import { register, type ErrorInfo } from '@/utils/api/auth/register';
-import { emailRules } from '@/utils/rules/emilRules';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter()
 
-const visible = ref(false)
 const loading = ref(false)
 const errors = ref<ErrorInfo[]>([])
 
@@ -42,26 +42,13 @@ const handleRegister = async () => {
         <logo-banner class="mb-5" />
 
         <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
-            <div class="text-subtitle-1 text-medium-emphasis">Account</div>
+            <div class="text-center text-h5">Account</div>
 
-            <v-text-field density="compact" placeholder="Email address" prepend-inner-icon="mdi-email-outline"
-                variant="outlined" :rules="emailRules" v-model="email"></v-text-field>
+            <EmailInput v-model="email" :disabled="loading" />
 
-            <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between mt-3">
-                Password
-            </div>
+            <PasswordInput v-model="password" :disabled="loading" />
 
-            <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
-                v-model="password" density="compact" placeholder="Enter your password"
-                prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                @click:append-inner="visible = !visible"></v-text-field>
-
-            <div class="text-subtitle-1 text-medium-emphasis">Confirm Password</div>
-
-            <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
-                v-model="passwordRepeat" density="compact" placeholder="Enter your password"
-                prepend-inner-icon="mdi-lock-outline" variant="outlined"
-                @click:append-inner="visible = !visible"></v-text-field>
+            <PasswordInput confirm v-model="passwordRepeat" :disabled="loading" />
 
             <v-card v-if="errors.length > 0" color="error" variant="tonal">
                 <v-card-text class="text-medium-emphasis text-caption">
