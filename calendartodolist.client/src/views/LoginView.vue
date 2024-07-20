@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import EmailInput from '@/components/forms/inputs/EmailInput.vue';
+import PasswordInput from '@/components/forms/inputs/PasswordInput.vue';
 import LogoBanner from '@/components/LogoBanner.vue'
 import { key } from '@/stores/auth';
 import { login } from '@/utils/api/auth/login';
-import { emailRules } from '@/utils/rules/emilRules';
-import { requiredRule } from '@/utils/rules/requiredRule';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
@@ -12,7 +12,6 @@ const store = useStore(key)
 const router = useRouter()
 const route = useRoute()
 
-const visible = ref(false)
 
 const email = ref('')
 const password = ref('')
@@ -33,6 +32,8 @@ const handleLogin = async () => {
 
     loading.value = false
 }
+
+watch(email, console.log)
 </script>
 
 <template>
@@ -44,25 +45,11 @@ const handleLogin = async () => {
             <v-alert v-if="regSuccess" text="Your registration was successful, now you can log in."
                 title="Successful registration" type="success" variant="tonal" class="mb-4"></v-alert>
 
-            <div class="text-subtitle-1 text-medium-emphasis">Account</div>
+            <div class="text-center text-h5">Account</div>
 
-            <v-text-field density="compact" placeholder="Email address" :rules="emailRules" v-model="email"
-                :disabled="loading" prepend-inner-icon="mdi-email-outline" variant="outlined"></v-text-field>
+            <EmailInput v-model="email" :disabled="loading" />
 
-            <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-                Password
-
-                <!-- to add later
-                 <a class="text-caption text-decoration-none text-blue" href="#" rel="noopener noreferrer"
-                    target="_blank">
-                    Forgot login password?
-                </a> -->
-            </div>
-
-            <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
-                density="compact" placeholder="Enter your password" prepend-inner-icon="mdi-lock-outline"
-                v-model="password" :rules="[requiredRule]" variant="outlined" :disabled="loading"
-                @click:append-inner="visible = !visible"></v-text-field>
+            <PasswordInput v-model="password" :disabled="loading" />
 
             <v-card v-if="isSuccess === false" class="mb-12 mt-2" color="error" variant="tonal">
                 <v-card-text class="text-medium-emphasis text-caption">
