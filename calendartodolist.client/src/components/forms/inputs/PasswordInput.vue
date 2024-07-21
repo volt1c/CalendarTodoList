@@ -18,5 +18,5 @@ defineProps<{
 
     <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
         v-model="password" density="compact" placeholder="Enter your password" prepend-inner-icon="mdi-lock-outline"
-        variant="outlined" @click:append-inner="visible = !visible"></v-text-field>
+        variant="outlined" @click:append-inner="visible = !visible" :disabled="disabled"></v-text-field>
 </template>
