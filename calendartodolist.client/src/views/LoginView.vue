@@ -33,7 +33,6 @@ const handleLogin = async () => {
     loading.value = false
 }
 
-watch(email, console.log)
 </script>
 
 <template>
