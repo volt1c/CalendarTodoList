@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import ToggleButton from '@/components/calendar/ToggleButton.vue';
+import WelcomeAlert from '@/components/calendar/WelcomeAlert.vue';
 import LogoBanner from '@/components/LogoBanner.vue';
 import { key } from '@/stores/auth';
 import type { IAssignment } from '@/types/IAssignment';
@@ -8,15 +10,15 @@ import { getAssignmentsPending } from '@/utils/api/assignments/getAssignmentsTod
 import { patchAssignment } from '@/utils/api/assignments/patchAssignment';
 import { postAssignment } from '@/utils/api/assignments/postAssignment';
 import { putAssignment } from '@/utils/api/assignments/putAssignment';
-import { today } from '@/utils/date/today';
-import { tomorrow } from '@/utils/date/tomorrow';
+import d from '@/utils/date';
 import { dateToJsonDateOnly } from '@/utils/parsers/dateToJsonDateOnly';
 import { unrefObject } from '@/utils/parsers/unrefObject';
 import { dateOnlyRules } from '@/utils/rules/dateOnlyRules';
 import { requiredRule } from '@/utils/rules/requiredRule';
-import { computed, onBeforeMount, ref } from 'vue';
+import { computed, onBeforeMount, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+
 
 const chipsData = [
     { name: 'Completed', value: 'completed', color: 'green-darken-4', icon: 'mdi-check-circle' },
@@ -27,16 +29,15 @@ const store = useStore(key)
 const router = useRouter()
 const route = useRoute()
 
-const months = ref([`${today().getFullYear()}-${today().getMonth() + 1}`])
-console.log(months.value)
-const date = ref<string | undefined>(dateToJsonDateOnly(today()))
+const months = ref([`${d.today().getFullYear()}-${d.today().getMonth() + 1}`])
+const date = ref<string | undefined>(dateToJsonDateOnly(d.today()))
 const chips = ref<string[]>([])
 const edit = ref<IAssignment>()
 const loading = ref(false)
 const newAssignmentName = ref('')
 
 const welcomeAlert = ref(route.query.status == 'new')
-const text = ref('today')
+const text = ref(dateToJsonDateOnly(d.today()))
 
 const allAssignments = ref<IAssignment[]>([])
 
@@ -62,23 +63,6 @@ onBeforeMount(async () => {
     }
     loading.value = false
 })
-
-const handleToggle = () => {
-    switch (text.value) {
-        case 'pending':
-            date.value = undefined
-            return
-        case 'today':
-            date.value = dateToJsonDateOnly()
-            return
-        case 'tomorrow':
-            date.value = dateToJsonDateOnly(tomorrow())
-            return
-        default:
-            date.value = undefined
-            return
-    }
-}
 
 const handleChip = (type: string) => {
     const index = chips.value.indexOf(type);
@@ -106,7 +90,6 @@ const handleCalendar = async (v: any) => {
                 const isDuplicated = acc.findIndex(a => a.id == curr.id) != -1
                 if (!isDuplicated) {
                     acc.push(curr)
-                    console.log('p')
                 }
                 return acc
             }, allAssignments.value)
@@ -115,17 +98,7 @@ const handleCalendar = async (v: any) => {
     }
 
     date.value = dateToJsonDateOnly(dateToParse)
-    switch (date.value) {
-        case dateToJsonDateOnly(today()):
-            text.value = 'today'
-            break
-        case dateToJsonDateOnly(tomorrow()):
-            text.value = 'tomorrow'
-            break
-        default:
-            text.value = ''
-            break
-    }
+    text.value = dateToJsonDateOnly(dateToParse)
 }
 
 const handleEdit = (id: string) => {
@@ -189,15 +162,15 @@ const dateAmount = (date: string) => allAssignments.value.reduce((acc, curr) => 
     return acc
 }, 0)
 
-const todayAmount = computed(() => dateAmount(dateToJsonDateOnly(today())))
+const todayAmount = computed(() => dateAmount(dateToJsonDateOnly(d.today())))
 const tomorrowAmount = computed(() => {
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
     return dateAmount(tomorrow.toJSON().slice(0, 10))
 })
 
-const allPending = computed(() => {
-    const todayDate = new Date(dateToJsonDateOnly(today()))
+const pending = computed(() => {
+    const todayDate = new Date(dateToJsonDateOnly(d.today()))
     return allAssignments.value.filter(a => !a.isComplete && new Date(a.date) < todayDate)
 })
 
@@ -208,11 +181,9 @@ const assignments = computed<IAssignment[]>(() => {
     let proceeded: IAssignment[] = allAssignments.value
 
     if (date.value === undefined)
-        proceeded = allPending.value;
+        proceeded = pending.value;
     else if (date.value)
         proceeded = proceeded.filter(el => el.date == date.value)
-
-
 
     if (chips.value.length > 0)
         proceeded = proceeded.filter(el => {
@@ -227,6 +198,8 @@ const assignments = computed<IAssignment[]>(() => {
 })
 
 const pickerDate = computed(() => (date.value ? new Date(date.value) : undefined))
+
+watch(text, value => date.value = (value == 'pending' ? undefined : value))
 </script>
 
 <template>
@@ -236,18 +209,12 @@ const pickerDate = computed(() => (date.value ? new Date(date.value) : undefined
                 <LogoBanner />
                 <v-card-subtitle>Plan your better tomorrow.</v-card-subtitle>
             </div>
-            <v-alert v-model="welcomeAlert" border="start" close-label="Close Alert" color="deep-purple-accent-4"
-                class="mx-2" title="Welcome 🎉" variant="tonal" closable>
-                We are glad that you decided to use our solution. We will take care of it to make using Calendar more
-                and more convenient over time.
-            </v-alert>
-            <v-btn-toggle v-model="text" color="deep-purple-accent-3" rounded="0" group @click="handleToggle"
-                class="w-100 d-flex border-t border-b mt-2">
-                <v-btn color="yellow-darken-4" value="pending" class="flex-grow-1"> Pending: {{ allPending.length }}
-                </v-btn>
-                <v-btn color="green" value="today" class="flex-grow-1"> Today: {{ todayAmount }} </v-btn>
-                <v-btn color="blue" value="tomorrow" class="flex-grow-1"> Tomorrow: {{ tomorrowAmount }} </v-btn>
-            </v-btn-toggle>
+
+            <WelcomeAlert v-model="welcomeAlert" />
+
+            <ToggleButton v-model="text" :pending-count="pending.length" :today-count="todayAmount"
+                :tomorrow-count="tomorrowAmount" />
+
             <div class="pa-1 mt-1">
                 <span class="ml-2">
                     Status:
@@ -258,6 +225,7 @@ const pickerDate = computed(() => (date.value ? new Date(date.value) : undefined
                     {{ data.name }}
                 </v-chip>
             </div>
+
             <div class="d-flex flex-row pa-2 flex-wrap">
 
                 <v-date-picker show-adjacent-months class="flex-grow-1 border-t rounded-0 w-50" :disabled="loading"
@@ -307,7 +275,7 @@ const pickerDate = computed(() => (date.value ? new Date(date.value) : undefined
                     <v-text-field v-model="newAssignmentName" class="ml-1 mr-2" append-icon="mdi-send"
                         clear-icon="mdi-close-circle" label="Task" type="text" variant="plain" clearable
                         :disabled="!date" @click:append="handlePostAssignment"
-                        @click:clear="console.log"></v-text-field>
+                        @click:clear="() => newAssignmentName = ''"></v-text-field>
                 </div>
             </div>
         </v-card>
