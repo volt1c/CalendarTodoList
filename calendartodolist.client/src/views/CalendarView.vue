@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AssignmentsScroll from '@/components/calendar/AssignmentsScroll.vue';
 import ToggleButton from '@/components/calendar/ToggleButton.vue';
 import WelcomeAlert from '@/components/calendar/WelcomeAlert.vue';
 import LogoBanner from '@/components/LogoBanner.vue';
@@ -101,8 +102,8 @@ const handleCalendar = async (v: any) => {
     text.value = dateToJsonDateOnly(dateToParse)
 }
 
-const handleEdit = (id: string) => {
-    edit.value = unrefObject(assignments.value.find(a => a.id == id))
+const handleEdit = (assignment: IAssignment) => {
+    edit.value = unrefObject(assignments.value.find(a => a.id == assignment.id))
 }
 
 const handlePostAssignment = async () => {
@@ -241,37 +242,10 @@ watch(text, value => date.value = (value == 'pending' ? undefined : value))
                         </div>
                         <div style="min-width: 300px;"></div>
                     </div>
-                    <v-virtual-scroll v-else height="344" :items="assignments">
-                        <template v-slot:default="{ item }">
-                            <v-list-item>
-                                <template v-slot:prepend>
-                                    <v-list-item-action start>
-                                        <v-checkbox-btn :disabled="loading" @update:model-value="handleCheck(item)"
-                                            :model-value="item.isComplete"></v-checkbox-btn>
-                                    </v-list-item-action>
-                                </template>
 
-                                <v-list-item-title :color="item.isComplete && 'grey-darken-3'">
-                                    {{ item.title }}
-                                </v-list-item-title>
+                    <AssignmentsScroll v-else :items="assignments" :on-check="handleCheck" :on-edit="handleEdit"
+                        :on-delete="handleDelete" height="344" />
 
-                                <v-list-item-subtitle>
-                                    {{ item.date }}
-                                </v-list-item-subtitle>
-
-                                <template v-slot:append>
-                                    <v-list-item-action end>
-                                        <v-btn color="blue-grey-lighten-1" icon="mdi-pen" variant="text"
-                                            :disabled="loading" @click="handleEdit(item.id)"></v-btn>
-                                    </v-list-item-action>
-                                    <v-list-item-action end>
-                                        <v-btn color="red-lighten-1" icon="mdi-delete" variant="text"
-                                            :disabled="loading" @click="handleDelete(item)"></v-btn>
-                                    </v-list-item-action>
-                                </template>
-                            </v-list-item>
-                        </template>
-                    </v-virtual-scroll>
                     <v-text-field v-model="newAssignmentName" class="ml-1 mr-2" append-icon="mdi-send"
                         clear-icon="mdi-close-circle" label="Task" type="text" variant="plain" clearable
                         :disabled="!date" @click:append="handlePostAssignment"
