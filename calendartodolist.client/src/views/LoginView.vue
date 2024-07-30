@@ -4,7 +4,7 @@ import PasswordInput from '@/components/forms/inputs/PasswordInput.vue';
 import LogoBanner from '@/components/LogoBanner.vue'
 import { key } from '@/stores/auth';
 import { login } from '@/utils/api/auth/login';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
