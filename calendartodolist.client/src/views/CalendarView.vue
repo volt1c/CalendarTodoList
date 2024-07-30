@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AssignmentsScroll from '@/components/calendar/AssignmentsScroll.vue';
+import FilterChips from '@/components/calendar/FilterChips.vue';
 import ToggleButton from '@/components/calendar/ToggleButton.vue';
 import WelcomeAlert from '@/components/calendar/WelcomeAlert.vue';
 import LogoBanner from '@/components/LogoBanner.vue';
@@ -19,12 +20,6 @@ import { requiredRule } from '@/utils/rules/requiredRule';
 import { computed, onBeforeMount, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-
-
-const chipsData = [
-    { name: 'Completed', value: 'completed', color: 'green-darken-4', icon: 'mdi-check-circle' },
-    { name: 'Not completed', value: 'not_completed', color: 'orange-darken-3', icon: 'mdi-close-circle' }
-]
 
 const store = useStore(key)
 const router = useRouter()
@@ -65,15 +60,7 @@ onBeforeMount(async () => {
     loading.value = false
 })
 
-const handleChip = (type: string) => {
-    const index = chips.value.indexOf(type);
-    if (index > -1) {
-        chips.value.splice(index, 1);
-        return
-    }
 
-    chips.value.push(type)
-}
 
 const handleCalendar = async (v: any) => {
     const vDate = new Date(v)
@@ -220,11 +207,7 @@ watch(text, value => date.value = (value == 'pending' ? undefined : value))
                 <span class="ml-2">
                     Status:
                 </span>
-                <v-chip v-for="(data, idx) in chipsData" :key="idx" class="ma-1" :color="data.color"
-                    :variant="chips.includes(data.value) ? 'flat' : 'outlined'" @click="handleChip(data.value)">
-                    <v-icon :icon="data.icon" start></v-icon>
-                    {{ data.name }}
-                </v-chip>
+                <FilterChips v-model="chips" />
             </div>
 
             <div class="d-flex flex-row pa-2 flex-wrap">
